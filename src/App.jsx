@@ -4,9 +4,42 @@ import { CORE_CONCEPTS } from './data.js';
 import Header from './components/Header.jsx';
 import CoreConcept from './components/CoreConcept.jsx';
 import TabButton from './components/TabButton.jsx';
+import { useState } from 'react'; //this is called React Hook. names starts with 'use' are React Hooks
+
+import { EXAMPLES } from './data.js';
 
 
 function App() {
+
+  const [ selectedTopic, setSelectedTopic ] = useState(); //selectedTopic-Current State value & setSelectedTopic - State updating function
+    //let tabContent = 'Please select a button';
+
+  function handleSelect(slectedButton){
+      //slectedButton => 'components', 'jsx', 'props', 'state'
+      setSelectedTopic(slectedButton); //tabContent = slectedButton;
+      
+      console.log(selectedTopic);
+  }
+  console.log('APP COMPONENT EXECUTING');
+
+   {/* Alternative way to display dynamic content
+    let tabContent = <p> Please select a topic.</p>
+    if(selectedTopic){
+      tabContent = (
+        <div id="tab-content">
+              <h3> {EXAMPLES[selectedTopic].title} </h3>
+              <p> {EXAMPLES[selectedTopic].description} </p>
+              <pre>
+                <code>
+                  {EXAMPLES[selectedTopic].code}   
+                </code>
+              </pre>
+            </div>
+      );
+
+    }
+    */}
+
   return (
     <div>
       <Header/>
@@ -28,14 +61,40 @@ function App() {
         <section id="examples">
           <h2>Examples</h2>
           <menu>
-           <TabButton>Components</TabButton>
-           <TabButton>JSX</TabButton>
-           <TabButton>Props</TabButton>
-           <TabButton>State</TabButton>
+           <TabButton isSelected={selectedTopic === 'components'} onSelect={() => handleSelect('components')}>Components</TabButton>
+           <TabButton isSelected={selectedTopic === 'jsx'} onSelect={() => handleSelect('jsx')}>JSX</TabButton>
+           <TabButton isSelected={selectedTopic === 'props'} onSelect={() => handleSelect('props')}>Props</TabButton>
+           <TabButton isSelected={selectedTopic === 'state'} onSelect={() => handleSelect('state')}>State</TabButton>
             {/*<TabButton label='Components'></TabButton>*/}
           </menu>
-        </section>
 
+          {/* Dynamic content */}
+          {/* By Default React Components Execute Only Once. 
+            Regular variable(tabContent) will not be used for updating UI because component function(App()) doesn't execute again.
+
+            So, We have to tell React if component should be executed again.
+            This can be achieved using the concept called 'State'.   
+          
+          {selectedTopic}
+          */}
+         
+          {!selectedTopic && <p>Please select a topic.</p>}
+          {selectedTopic && (
+            <div id="tab-content">
+              <h3> {EXAMPLES[selectedTopic].title} </h3>
+              <p> {EXAMPLES[selectedTopic].description} </p>
+              <pre>
+                <code>
+                  {EXAMPLES[selectedTopic].code}   
+                </code>
+              </pre>
+            </div>
+          )}
+
+        {/* Alternative way to display dynamic content
+          {tabContent}
+        */}
+        </section>
         <h2>Time to get started!</h2>
       </main>
     </div>
